@@ -5,12 +5,16 @@ from cerebras.cloud.sdk import Cerebras
 from dotenv import load_dotenv
 
 load_dotenv()
+from auth import verify_api_key
+from fastapi import Depends
+
 CEREBRAS_MODEL = "gpt-oss-120b"
 api_key = os.getenv("CEREBRAS_API_KEY")
 client = Cerebras(api_key=api_key)
 
 app = FastAPI(title="Cerebras Chatbot API")
-
+if not api_key:
+    raise RuntimeError("CEREBRAS_API_KEY is missing")
 class ChatRequest(BaseModel):
     prompt: str
 
@@ -43,6 +47,6 @@ def health():
 
 
 @app.post("/chat", response_model=ChatResponse)
-def chat(req: ChatRequest):
+def chat(req: ChatRequest, api_key: str = Depends(verify_api_key),):
     reply = query_cerebras(req.prompt)
     return {"response": reply}
