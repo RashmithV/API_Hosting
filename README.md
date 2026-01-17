@@ -1,5 +1,5 @@
 
-# Cerebras Chatbot API
+# Chatbot API
 
 A FastAPI-based REST API that leverages the Cerebras cloud SDK to provide intelligent chat completions.
 
